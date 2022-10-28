@@ -4,8 +4,9 @@ module "bastion-sg" {
   name        = "${local.p}-bas-sg"
   description = "${local.p}-bas-sg"
   rules = {
-    # "ingress_http_80"   = local.ingress_http_80,
-    # "ingress_https_443" = local.ingress_https_443
+    "ingress_http_80"   = local.ingress_http_80,
+    "ingress_https_443" = local.ingress_https_443,
+    "egress_any"        = local.egress_any
   }
 }
 
@@ -16,7 +17,7 @@ module "bastion" {
   ami           = "ami-0de5311b2a443fb89"
   instance_type = "t2.medium"
   iam_profile   = "AmazonSSMRoleForInstancesQuickSetup"
-  sg_id       = [module.bastion-sg.sg.id]
+  sg_id         = [module.bastion-sg.sg.id]
 
   # size        = 8
   # device_name = "/dev/xvda"

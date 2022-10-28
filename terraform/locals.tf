@@ -30,5 +30,6 @@ locals {
   # [ type, protocol, from_port, to_port,  sg-id, cidr_blocks, description ]
   ingress_http_80   = ["ingress", "tcp", 80, 80, null, ["0.0.0.0/0"], null]
   ingress_https_443 = ["ingress", "tcp", 443, 443, null, ["0.0.0.0/0"], null]
+  egress_any        = ["egress", "tcp", 0, 65535, null, ["0.0.0.0/0"], null]
   # ingress_ecs_dynamic-port = ["ingress", "tcp", 32768, 61000, module.public-alb-sg.sg.id, null, null]
 }

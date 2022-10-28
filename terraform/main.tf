@@ -42,6 +42,7 @@ module "public-alb-tg-sg" {
   rules = {
     "ingress_http_80"   = local.ingress_http_80,
     "ingress_https_443" = local.ingress_https_443,
+    "egress_any"        = local.egress_any
     # "ingress_ecs_dynamic-port" = local.ingress_ecs_dynamic-port
   }
 }
