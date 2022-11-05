@@ -27,9 +27,9 @@ locals {
     }
   ]
 
-  # [ type, protocol, from_port, to_port,  sg-id, cidr_blocks, description ]
-  ingress_http_80   = ["ingress", "tcp", 80, 80, null, ["0.0.0.0/0"], null]
-  ingress_https_443 = ["ingress", "tcp", 443, 443, null, ["0.0.0.0/0"], null]
-  egress_any        = ["egress", "tcp", 0, 65535, null, ["0.0.0.0/0"], null]
-  # ingress_ecs_dynamic-port = ["ingress", "tcp", 32768, 61000, module.public-alb-sg.sg.id, null, null]
+  # [ type, protocol, from_port, to_port,  description, (map){cidr_blocks, source_sg-id, self}]
+  ingress_http_80   = ["ingress", "tcp", 80, 80, null, { cidr_blocks = ["0.0.0.0/0"] }]
+  ingress_https_443 = ["ingress", "tcp", 443, 443, null, { cidr_blocks = ["0.0.0.0/0"] }]
+  egress_any        = ["egress", "tcp", 0, 65535, null, { cidr_blocks = ["0.0.0.0/0"] }]
+  # ingress_ecs_dynamic-port = ["ingress", "tcp", 32768, 61000, {security_sg=module.public-alb-sg.sg.id}]
 }

@@ -15,7 +15,8 @@ resource "aws_security_group_rule" "this" {
   protocol                 = each.value[1]
   from_port                = each.value[2]
   to_port                  = each.value[3]
-  source_security_group_id = each.value[4]
-  cidr_blocks              = each.value[5]
-  description              = each.value[6]
+  description              = each.value[4]
+  cidr_blocks              = lookup(each.value[5], "cidr_blocks", null)
+  source_security_group_id = lookup(each.value[5], "source_sg", null)
+  self                     = lookup(each.value[5], "self", null)
 }
