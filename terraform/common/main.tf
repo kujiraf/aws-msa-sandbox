@@ -1,5 +1,5 @@
 module "public_subnets" {
-  source           = "./modules/subnet"
+  source           = "../modules/subnet"
   vpc_id           = data.aws_vpc.ma-personal-vpc.id
   subnets          = local.public_subnets
   route_table_name = "${local.p}-public-rtb"
@@ -16,7 +16,7 @@ resource "aws_nat_gateway" "public_nag_gw" {
 }
 
 module "private_subnets" {
-  source           = "./modules/subnet"
+  source           = "../modules/subnet"
   vpc_id           = data.aws_vpc.ma-personal-vpc.id
   subnets          = local.private_subnets
   route_table_name = "${local.p}-private-rtb"
@@ -24,7 +24,7 @@ module "private_subnets" {
 }
 
 module "public-alb-sg" {
-  source      = "./modules/sg"
+  source      = "../modules/sg"
   vpc_id      = data.aws_vpc.ma-personal-vpc.id
   name        = "${local.p}-public-alb-sg"
   description = "${local.p}-public-alb-sg"
@@ -35,7 +35,7 @@ module "public-alb-sg" {
 }
 
 module "public-alb-tg-sg" {
-  source      = "./modules/sg"
+  source      = "../modules/sg"
   vpc_id      = data.aws_vpc.ma-personal-vpc.id
   name        = "${local.p}-public-alb-tg-sg"
   description = "${local.p}-public-alb-tg-sg"

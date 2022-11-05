@@ -1,5 +1,5 @@
 module "bastion-sg" {
-  source      = "./modules/sg"
+  source      = "../modules/sg"
   vpc_id      = data.aws_vpc.ma-personal-vpc.id
   name        = "${local.p}-bas-sg"
   description = "${local.p}-bas-sg"
@@ -11,7 +11,7 @@ module "bastion-sg" {
 }
 
 module "bastion" {
-  source = "./modules/ec2"
+  source = "../modules/ec2"
 
   vpc_id        = data.aws_vpc.ma-personal-vpc.id
   ami           = "ami-0de5311b2a443fb89"
