@@ -28,3 +28,23 @@ module "eks-cluster-sg" {
     "egress_any"       = local.egress_any
   }
 }
+
+resource "aws_eks_cluster" "this" {
+  depends_on                = [aws_cloudwatch_log_group.eks_log_group]
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  name     = "${local.p}-eks-cluster"
+  role_arn = module.eks-cluster-role.role.arn
+  version  = "1.23"
+  vpc_config {
+    subnet_ids              = [for l in data.terraform_remote_state.common_state.outputs.private_subnets : l.id]
+    security_group_ids      = [module.eks-cluster-sg.sg.id]
+    endpoint_private_access = true
+    public_access_cidrs     = local.allowed_cidr
+  }
+}
+
+resource "aws_cloudwatch_log_group" "eks_log_group" {
+  name              = "/aws/eks/${local.p}-eks/cluster"
+  retention_in_days = 7
+}
