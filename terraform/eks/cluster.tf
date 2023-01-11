@@ -22,9 +22,10 @@ module "eks-cluster-sg" {
   source      = "../modules/sg"
   vpc_id      = data.aws_vpc.ma-personal-vpc.id
   name        = "${local.p}-eks-cluster-sg"
-  description = "${local.p}-eks-cluster-sg"
+  description = "managed my terraform module eks-cluster-sg"
   rules = {
     "ingress_all_self" = ["ingress", "tcp", 0, 65535, null, { self = true }]
+    "ingress_bas_sg"   = ["ingress", "tcp", 0, 65535, "ingress from bastion", { source_sg = data.terraform_remote_state.common_state.outputs.bastion_sg.id }]
     "egress_any"       = local.egress_any
   }
 }

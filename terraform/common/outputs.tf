@@ -5,3 +5,7 @@ output "public_subnets" {
 output "private_subnets" {
   value = module.private_subnets.subnets
 }
+
+output "bastion_sg" {
+  value = module.bastion-sg.sg
+}
