@@ -32,5 +32,5 @@ module "irsa-s3-readonly" {
     ]
 }
   EOF
-  policies           = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  policies           = ["arn:aws:iam::aws:policy/AmazonS3FullAccess"]
 }
