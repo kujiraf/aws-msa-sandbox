@@ -49,9 +49,3 @@ resource "aws_cloudwatch_log_group" "eks_log_group" {
   name              = "/aws/eks/${local.p}-eks/cluster"
   retention_in_days = 7
 }
-
-resource "aws_iam_openid_connect_provider" "eks_oidc_provider" {
-  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
-  thumbprint_list = [data.tls_certificate.eks_oidc_provider.certificates[0].sha1_fingerprint]
-  client_id_list  = ["sts.amazonaws.com"]
-}
