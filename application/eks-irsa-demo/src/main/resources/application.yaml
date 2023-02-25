@@ -1,0 +1,8 @@
+bucket:
+  name: ma-furukawatkr-eks-test
+
+s3:
+  fullaccess:
+    role.arn: ${AWS_ROLE_ARN}
+    session.name: eks-irsa-test-session
+    token.path: ${AWS_WEB_IDENTITY_TOKEN_FILE}
