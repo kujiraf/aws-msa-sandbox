@@ -8,10 +8,11 @@ resource "aws_iam_openid_connect_provider" "eks_oidc_provider" {
 
 # saが引き受けるロールの定義
 # service account作成時に以下のコマンドでアノテーション付与が必要
-# kubectl annotate sa my-serviceaccount eks.amazonaws.com/role-arn=$MaFurukawatkrMyServiceAccountIrsa_ROLE_ARN
-module "irsa-s3-readonly" {
+# kubectl annotate sa federation-sa eks.amazonaws.com/
+# role-arn=$MaFurukawatkrForS3Sa_ROLE_ARN
+module "irsa-s3-fullaccess" {
   source             = "../modules/iam"
-  role_name          = "MaFurukawatkrMyServiceAccountIrsa"
+  role_name          = "MaFurukawatkrForS3Sa"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -24,7 +25,7 @@ module "irsa-s3-readonly" {
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
                 "StringEquals": {
-                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:sub": "system:serviceaccount:default:my-serviceaccount",
+                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:sub": "system:serviceaccount:default:federation-s3-sa",
                     "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:aud": "sts.amazonaws.com"
                 }
             }
@@ -33,4 +34,30 @@ module "irsa-s3-readonly" {
 }
   EOF
   policies           = ["arn:aws:iam::aws:policy/AmazonS3FullAccess"]
+}
+
+module "irsa-ec2-fullaccess" {
+  source             = "../modules/iam"
+  role_name          = "MaFurukawatkrForEc2Sa"
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "${aws_iam_openid_connect_provider.eks_oidc_provider.arn}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:sub": "system:serviceaccount:default:federation-ec2-sa",
+                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
+  EOF
+  policies           = ["arn:aws:iam::aws:policy/AmazonEC2FullAccess"]
 }
