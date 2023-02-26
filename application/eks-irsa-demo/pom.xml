@@ -7,6 +7,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.0.3</version>
+
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.example</groupId>
@@ -15,7 +16,7 @@
   <name>eks-irsa-demo</name>
   <description>Demo project for Spring Boot</description>
   <properties>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <spring-cloud.version>2021.0.3</spring-cloud.version>
     <spring-cloud-aws.version>2.4.1</spring-cloud-aws.version>
     <aws-java-sdk.version>1.12.195</aws-java-sdk.version>
@@ -23,7 +24,7 @@
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
       <groupId>io.awspring.cloud</groupId>
