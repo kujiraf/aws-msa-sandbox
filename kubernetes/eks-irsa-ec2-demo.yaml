@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: federation-ec2-sa
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::626394096352:role/MaFurukawatkrForEc2Sa
+    eks.amazonaws.com/role-arn: arn:aws:iam::${ACCOUNT_ID}:role/MaFurukawatkrForEc2Sa
 
 ---
 apiVersion: apps/v1
