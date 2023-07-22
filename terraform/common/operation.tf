@@ -16,7 +16,7 @@ module "bastion" {
   vpc_id        = data.aws_vpc.ma-personal-vpc.id
   ami           = "ami-0de5311b2a443fb89"
   instance_type = "t2.medium"
-  iam_profile   = "AmazonSSMRoleForInstancesQuickSetup"
+  iam_profile   = "MaFurukawatkrEC2Role"
   sg_id         = [module.bastion-sg.sg.id]
 
   # size        = 8

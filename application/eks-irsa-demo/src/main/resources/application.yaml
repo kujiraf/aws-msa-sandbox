@@ -1,0 +1,13 @@
+bucket:
+  name: ma-furukawatkr-eks-test
+
+s3:
+  fullaccess:
+    role.arn: ${AWS_ROLE_ARN:xxxx}
+    session.name: eks-irsa-test-session
+    token.path: ${AWS_WEB_IDENTITY_TOKEN_FILE:/path/to/tokenfile}
+
+server:
+  port: 8080
+  servlet:
+    context-path: /backend

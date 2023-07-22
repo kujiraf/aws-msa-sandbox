@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: federation-ec2-sa
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::${ACCOUNT_ID}:role/MaFurukawatkrForEc2Sa
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-irsa-ec2-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eks-irsa-ec2-demo-app
+  template:
+    metadata:
+      labels:
+        app: eks-irsa-ec2-demo-app
+    spec:
+      containers:
+      - name: eks-irsa-ec2-demo-demo
+        image: kujira1234/eks-irsa-demo:latest
+        ports:
+        - containerPort: 8080
+      serviceAccountName: federation-ec2-sa
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eks-irsa-ec2-demo
+spec:
+  selector:
+    app: eks-irsa-ec2-demo-app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
