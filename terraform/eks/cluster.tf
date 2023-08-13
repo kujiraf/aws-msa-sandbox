@@ -38,7 +38,7 @@ resource "aws_eks_cluster" "this" {
   role_arn = module.eks-cluster-role.role.arn
   version  = local.cluster_version
   vpc_config {
-    subnet_ids              = [for l in data.terraform_remote_state.common_state.outputs.private_subnets : l.id]
+    subnet_ids              = local.subnets_list
     security_group_ids      = [module.eks-cluster-sg.sg.id]
     endpoint_private_access = true
     public_access_cidrs     = local.allowed_cidr

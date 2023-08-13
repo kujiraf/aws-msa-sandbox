@@ -53,3 +53,23 @@ data:
     <h1>This is nginx-1</h1>
     </body>
     </html>
+
+---
+# type=LoadBalancer のため、"AWS Load Balancer Controller" が必要
+# curl $(kubectl get svc nginx-1-nlb -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}'):8080
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-1-nlb
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+spec:
+  selector:
+    app: nginx-1
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 80

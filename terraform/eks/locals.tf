@@ -11,4 +11,9 @@ locals {
   egress_any        = ["egress", "tcp", 0, 65535, null, { cidr_blocks = ["0.0.0.0/0"] }]
 
   allowed_cidr = ["106.72.167.33/32"]
+
+  subnets_list = concat(
+    [for l in data.terraform_remote_state.common_state.outputs.private_subnets : l.id],
+    [for l in data.terraform_remote_state.common_state.outputs.public_subnets : l.id]
+  )
 }

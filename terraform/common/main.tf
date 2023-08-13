@@ -4,6 +4,7 @@ module "public_subnets" {
   subnets          = local.public_subnets
   route_table_name = "${local.p}-public-rtb"
   igw_id           = data.aws_internet_gateway.ma-personal-igw.internet_gateway_id
+  tags             = { "kubernetes.io/role/elb" = 1 }
 }
 
 resource "aws_nat_gateway" "public_nag_gw" {
@@ -21,6 +22,7 @@ module "private_subnets" {
   subnets          = local.private_subnets
   route_table_name = "${local.p}-private-rtb"
   nat_gw_id        = aws_nat_gateway.public_nag_gw.id
+  tags             = { "kubernetes.io/role/internal-elb" = 1 }
 }
 
 module "public-alb-sg" {

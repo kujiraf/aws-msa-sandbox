@@ -1,0 +1,71 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: default
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip # Cluster-ip にルーティングさせるためのモード。デフォルトだとNodePortのサービスにしかルーティングできない
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/actions.response-503: >
+      {"type":"fixed-response","fixedResponseConfig":{"contentType":"text/plain","statusCode":"503","messageBody":"This is customed by ingress annotation: 503 error text. "}}
+    alb.ingress.kubernetes.io/actions.redirect-to-eks: >
+      {"type":"redirect","redirectConfig":{"host":"aws.amazon.com","path":"/eks/","port":"443","protocol":"HTTPS","query":"k=v","statusCode":"HTTP_302"}}
+    alb.ingress.kubernetes.io/actions.weighted-routing: |
+        {
+            "type":"forward",
+            "forwardConfig":{
+            "targetGroups":[
+                {
+                "serviceName":"nginx-1",
+                "servicePort":"8080",
+                "weight":80
+                },
+                {
+                "serviceName":"nginx-2",
+                "servicePort":"8080",
+                "weight":20
+                }
+            ]
+            }
+        }
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /503
+            pathType: Exact
+            backend:
+              service:
+                name: response-503
+                port:
+                  name: use-annotation
+          - path: /eks
+            pathType: Exact
+            backend:
+              service:
+                name: redirect-to-eks
+                port:
+                  name: use-annotation
+# ALBはURLのrewriteができないため、 /nginx/v1/* にアクセスすると /usr/share/nginx/html/nginx/v1/* となり、404となってしまう
+          # - path: /nginx/v1/*
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: nginx-1
+          #       port:
+          #         number: 8080
+          # - path: /nginx/v2/*
+          #   pathType: ImplementationSpecific
+          #   backend:
+          #     service:
+          #       name: nginx-2
+          #       port:
+          #         number: 8080
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: weighted-routing
+                port:
+                  name: use-annotation

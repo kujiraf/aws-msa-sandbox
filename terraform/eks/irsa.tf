@@ -61,3 +61,33 @@ module "irsa-ec2-fullaccess" {
   EOF
   policies           = ["arn:aws:iam::aws:policy/AmazonEC2FullAccess"]
 }
+
+
+# ServiceやIngressでLBを作るときに必要なLBコントローラのためのassume roleとpolicy
+module "lb-controller" {
+  source             = "../modules/iam"
+  role_name          = "MaFurukawatkrForLbController"
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "${aws_iam_openid_connect_provider.eks_oidc_provider.arn}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:aud": "sts.amazonaws.com",
+                    "${aws_iam_openid_connect_provider.eks_oidc_provider.url}:sub": "system:serviceaccount:kube-system:aws-load-balancer-controller"
+                }
+            }
+        }
+    ]
+}
+  EOF
+  # 先に aws_iam_policy.lb_controller_policy, aws_iam_policy.lb_additional_policy リソースを作成する必要あり
+  # terraform apply --target={aws_iam_policy.lb_controller_policy,aws_iam_policy.lb_additional_policy} --auto-approve
+  policies = [aws_iam_policy.lb_controller_policy.arn, aws_iam_policy.lb_additional_policy.arn]
+}
