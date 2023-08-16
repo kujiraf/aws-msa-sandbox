@@ -8,7 +8,7 @@ metadata:
   name: aws-load-balancer-controller
   namespace: kube-system
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::${ACCOUNT_ID}:role/MaFurukawatkrForLbController
+    eks.amazonaws.com/role-arn: arn:aws:iam::$(aws sts get-caller-identity --query "Account" --output text):role/MaFurukawatkrForLbController
 EOF
 
 # https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/aws-load-balancer-controller.html の手順5で
