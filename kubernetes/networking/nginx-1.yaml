@@ -5,7 +5,7 @@ metadata:
     app: nginx-1
   name: nginx-1
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nginx-1
@@ -31,6 +31,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: nginx-1
   name: nginx-1
 spec:
   selector:
@@ -60,6 +62,8 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: nginx-1
   name: nginx-1-nlb
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: external

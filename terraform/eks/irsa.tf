@@ -120,6 +120,5 @@ module "gateway-api-controller" {
     ]
 }
     EOF
-  # terraform apply --target=aws_iam_policy.gw_api_controller_policy --auto-approve
-  policies           = [aws_iam_policy.gw_api_controller_policy.arn]
+  policies = ["arn:aws:iam::aws:policy/VPCLatticeFullAccess"]
 }

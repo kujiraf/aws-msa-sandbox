@@ -284,23 +284,3 @@ resource "aws_iam_policy" "lb_additional_policy" {
     ]
   })
 }
-
-resource "aws_iam_policy" "gw_api_controller_policy" {
-  name = "AWSGatewayApiControllerIAMPolicy"
-  path = "/"
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "vpc-lattice:*",
-          "iam:CreateServiceLinkedRole",
-          "ec2:DescribeVpcs",
-          "ec2:DescribeSubnets"
-        ],
-        "Resource" : "*"
-      }
-    ]
-  })
-}
